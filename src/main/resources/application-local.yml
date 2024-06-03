@@ -1,0 +1,37 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  sql:
+    init:
+      platform: mariadb
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true
+    username: root
+    password: root
+    hikari:
+      maximum-pool-size: 10
+      max-lifetime: 3000000
+      connection-timeout: 60000
+      register-mbeans: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+  endpoint:
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
