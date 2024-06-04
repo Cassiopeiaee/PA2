@@ -16,6 +16,7 @@ public class Users {
     private String username;
     private String password;
     private String email;
+    private String role;
 
     public Users(){
 
@@ -51,5 +52,13 @@ public class Users {
 
     public void setEmail(String mail) {
         this.email = mail;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole(){
+        return role;
     }
 }

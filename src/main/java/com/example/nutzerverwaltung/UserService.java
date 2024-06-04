@@ -6,18 +6,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
+import java.util.Objects;
 
 @Service
 public class UserService {
 
     public Users createUser(Users user) {
         try (Connection connection = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root")) {
-            String sql = "INSERT INTO users (id, email, password, username) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO users (id, email, password, username, role) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setLong(1, user.getid());
                 statement.setString(2, user.getEmail());
                 statement.setString(3, user.getPassword());
                 statement.setString(4, user.getUsername());
+                statement.setString(5, user.getRole());
 
                 int affectedRows = statement.executeUpdate();
                 if (affectedRows == 0) {
@@ -32,27 +34,31 @@ public class UserService {
         return user;
     }
 
+
+
+
     public ResponseEntity<String> updateUser(Long id, Users updatedUser) {
         try (Connection connection = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root")) {
-            String query = "UPDATE users.users SET username = ?, email = ?, password = ? WHERE id = ?";
+            String query = "UPDATE users SET username = ?, email = ?, password = ?, role = ? WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, updatedUser.getUsername());
             preparedStatement.setString(2, updatedUser.getEmail());
             preparedStatement.setString(3, updatedUser.getPassword());
-            preparedStatement.setLong(4, id);
+            preparedStatement.setString(4, updatedUser.getRole());
+            preparedStatement.setLong(5, id);
 
             Long rowsUpdated = (long) preparedStatement.executeUpdate();
             if (rowsUpdated > 0) {
-                if (updatedUser.getid() != id) {
-                    String updateIdQuery = "UPDATE users.users SET id = ? WHERE id = ?";
+                if (!Objects.equals(updatedUser.getid(), id)) {
+                    String updateIdQuery = "UPDATE users SET id = ? WHERE id = ?";
                     PreparedStatement updateIdStatement = connection.prepareStatement(updateIdQuery);
                     updateIdStatement.setLong(1, updatedUser.getid());
                     updateIdStatement.setLong(2, id);
                     Long idRowsUpdated = (long) updateIdStatement.executeUpdate();
                     if (idRowsUpdated > 0) {
-                        return ResponseEntity.ok("Nutzer Update erfolgreich.");
+                        return ResponseEntity.ok("Nutzer Update erfolgreich, ID geändert.");
                     } else {
-                        return ResponseEntity.status(404).body("Fehler");
+                        return ResponseEntity.status(404).body("Fehler beim Ändern der ID.");
                     }
                 }
                 return ResponseEntity.ok("Nutzer Update erfolgreich.");
@@ -64,17 +70,19 @@ public class UserService {
         }
     }
 
+
     public String getUsers() {
         JSONArray jsonArray = new JSONArray();
         try (Connection connection1 = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root")) {
             Statement statement1 = connection1.createStatement();
-            ResultSet result = statement1.executeQuery("SELECT * FROM users.users");
+            ResultSet result = statement1.executeQuery("SELECT * FROM users");
             while (result.next()) {
                 JSONObject userObject = new JSONObject();
-                userObject.put("id", result.getString("id"));
+                userObject.put("id", result.getLong("id"));
                 userObject.put("username", result.getString("username"));
                 userObject.put("email", result.getString("email"));
                 userObject.put("password", result.getString("password"));
+                userObject.put("role", result.getString("role"));
                 jsonArray.put(userObject);
             }
         } catch (Exception e) {
