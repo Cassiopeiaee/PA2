@@ -15,11 +15,11 @@ public class UserService {
         try (Connection connection = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root")) {
             String sql = "INSERT INTO users (id, email, password, username, role) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setLong(1, user.getid());
+                statement.setLong(1, user.getId());
                 statement.setString(2, user.getEmail());
                 statement.setString(3, user.getPassword());
                 statement.setString(4, user.getUsername());
-                statement.setString(5, user.getRole());
+                statement.setString(5, user.getRole().name());
 
                 int affectedRows = statement.executeUpdate();
                 if (affectedRows == 0) {
@@ -34,9 +34,6 @@ public class UserService {
         return user;
     }
 
-
-
-
     public ResponseEntity<String> updateUser(Long id, Users updatedUser) {
         try (Connection connection = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root")) {
             String query = "UPDATE users SET username = ?, email = ?, password = ?, role = ? WHERE id = ?";
@@ -44,15 +41,16 @@ public class UserService {
             preparedStatement.setString(1, updatedUser.getUsername());
             preparedStatement.setString(2, updatedUser.getEmail());
             preparedStatement.setString(3, updatedUser.getPassword());
-            preparedStatement.setString(4, updatedUser.getRole());
+            preparedStatement.setString(4, updatedUser.getRole().name());
             preparedStatement.setLong(5, id);
+
 
             Long rowsUpdated = (long) preparedStatement.executeUpdate();
             if (rowsUpdated > 0) {
-                if (!Objects.equals(updatedUser.getid(), id)) {
+                if (!Objects.equals(updatedUser.getId(), id)) {
                     String updateIdQuery = "UPDATE users SET id = ? WHERE id = ?";
                     PreparedStatement updateIdStatement = connection.prepareStatement(updateIdQuery);
-                    updateIdStatement.setLong(1, updatedUser.getid());
+                    updateIdStatement.setLong(1, updatedUser.getId());
                     updateIdStatement.setLong(2, id);
                     Long idRowsUpdated = (long) updateIdStatement.executeUpdate();
                     if (idRowsUpdated > 0) {
@@ -69,7 +67,6 @@ public class UserService {
             return ResponseEntity.status(500).body("Fehler");
         }
     }
-
 
     public String getUsers() {
         JSONArray jsonArray = new JSONArray();

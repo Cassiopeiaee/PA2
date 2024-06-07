@@ -1,10 +1,13 @@
 package com.example.nutzerverwaltung;
 
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import javax.management.relation.Role;
 
 @Entity
 public class Users {
@@ -16,49 +19,58 @@ public class Users {
     private String username;
     private String password;
     private String email;
-    private String role;
 
-    public Users(){
+    @Enumerated(EnumType.STRING)
+    private rolle role;
 
+    public Users() {
     }
 
-    public String getUsername(){
-        return username;
-    }
-
-    public void setUsername(String username){
+    public Users(String username, String password, String email, rolle role) {
         this.username = username;
-    }
-
-    public String getPassword(){
-        return password;
-    }
-
-    public void setPassword(String password){
         this.password = password;
-    }
-
-    public String getEmail(){
-        return email;
-    }
-
-    public long getid(){
-        return id;
-    }
-
-    public void setId(long id){
-        this.id = id;
-    }
-
-    public void setEmail(String mail) {
-        this.email = mail;
-    }
-
-    public void setRole(String role) {
+        this.email = email;
         this.role = role;
     }
 
-    public String getRole(){
+    // Getters and Setters
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public rolle getRole() {
         return role;
+    }
+
+    public void setrolle(rolle role) {
+        this.role = role;
     }
 }
