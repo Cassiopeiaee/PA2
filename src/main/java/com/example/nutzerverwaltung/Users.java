@@ -7,8 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import javax.management.relation.Role;
-
 @Entity
 public class Users {
 
@@ -21,19 +19,19 @@ public class Users {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private rolle role;
+    private Rolle role;
 
     public Users() {
     }
 
-    public Users(String username, String password, String email, rolle role) {
+    public Users(String username, String password, String email, Rolle role) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
     }
 
-    // Getters and Setters
+
     public String getUsername() {
         return username;
     }
@@ -66,11 +64,11 @@ public class Users {
         this.id = id;
     }
 
-    public rolle getRole() {
+    public Rolle getRolle() {
         return role;
     }
 
-    public void setrolle(rolle role) {
+    public void setrolle(Rolle role) {
         this.role = role;
     }
 }

@@ -33,10 +33,20 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}/update")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody Users updatedUser) {
-        return userService.updateUser(id, updatedUser);
-    }
+    public ResponseEntity<String> updateUser(@RequestBody AdminUserRequest request, @PathVariable Long id) {
+        try{
+            System.out.println("Admin Username: " + request.getAdmin().getUsername());
+            System.out.println("Update User ID: " + request.getUpdatedUser().getId());
 
+            Users updatedUser = userService.updateUser(id, request);
+            return ResponseEntity.ok("Nutzer wurde erfolgreich Verändert");
+        }catch(IllegalArgumentException e){
+            return ResponseEntity.status(403).body("Nur ein Admin kann einen Nutzer verändern");
+        }catch(RuntimeException e){
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+
+    }
 
 
     @GetMapping(value ="/users/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,10 +56,12 @@ public class UserController {
     }
 
 
-
-    @DeleteMapping("/users/{id}/delete")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        return userService.deleteUser(id);
+    @DeleteMapping("/users/delete")
+    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserRequest request) {
+        boolean success = userService.deleteUser(request);
+        if (!success){
+            return ResponseEntity.status(403).body("Fehler: Nutzer konnte nicht gelöscht werden");
+        }
+        return ResponseEntity.ok("Nutzer wurde gelöscht");
     }
-
 }
