@@ -103,6 +103,30 @@ public class UserService {
         }
     }
 
+    public Users getUserById(Long id) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root")) {
+            String query = "SELECT * FROM users WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setLong(1, id);
+                try (ResultSet result = statement.executeQuery()) {
+                    if (result.next()) {
+                        Users user = new Users();
+                        user.setId(result.getLong("id"));
+                        user.setUsername(result.getString("username"));
+                        user.setEmail(result.getString("email"));
+                        user.setPassword(result.getString("password"));
+                        user.setrolle(Rolle.valueOf(result.getString("role")));
+                        return user;
+                    } else {
+                        throw new SQLException("Nutzer nicht gefunden.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Fehler beim Verbinden zur Datenbank", e);
+        }
+    }
+
 
     public String getUsers() {
         JSONArray jsonArray = new JSONArray();

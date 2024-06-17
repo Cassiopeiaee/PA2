@@ -64,4 +64,16 @@ public class UserController {
         }
         return ResponseEntity.ok("Nutzer wurde gelöscht");
     }
+
+
+    @GetMapping(value = "/users/get/{id}" , produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Users> getUserById(@PathVariable Long id) {
+        Users user = userService.getUserById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
+    }
 }
+
