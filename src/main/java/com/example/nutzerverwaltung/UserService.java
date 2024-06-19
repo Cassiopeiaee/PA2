@@ -104,23 +104,29 @@ public class UserService {
     }
 
     public Users getUserById(Long id) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root")) {
-            String query = "SELECT * FROM users WHERE id = ?";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setLong(1, id);
-                try (ResultSet result = statement.executeQuery()) {
-                    if (result.next()) {
-                        Users user = new Users();
-                        user.setId(result.getLong("id"));
-                        user.setUsername(result.getString("username"));
-                        user.setEmail(result.getString("email"));
-                        user.setPassword(result.getString("password"));
-                        user.setrolle(Rolle.valueOf(result.getString("role")));
-                        return user;
-                    } else {
-                        throw new SQLException("Nutzer nicht gefunden.");
-                    }
+        try (Connection connection = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root");
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id = ?")) {
+
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                Users user = new Users();
+                user.setId(resultSet.getLong("id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setEmail(resultSet.getString("email"));
+
+                String rolleString = resultSet.getString("role");
+                if (rolleString != null && !rolleString.isEmpty()) {
+                    user.setrolle(Rolle.valueOf(rolleString));
+                } else {
+                    user.setrolle(null);
                 }
+
+                return user;
+            } else {
+                return null;
             }
         } catch (SQLException e) {
             throw new RuntimeException("Fehler beim Verbinden zur Datenbank", e);

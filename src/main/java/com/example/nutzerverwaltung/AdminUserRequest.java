@@ -44,7 +44,7 @@ public class AdminUserRequest {
         }
     }
 
-    public static class UpdatedUser {
+    static class UpdatedUser {
         private Long id;
         private String username;
         private String password;
