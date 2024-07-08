@@ -4,6 +4,7 @@ public class DeleteUserRequest {
     private String username;
     private String password;
     private Long targetUserId;
+    private AdminUserRequest.Admin admin;
 
 
     public String getUsername(){
@@ -30,4 +31,11 @@ public class DeleteUserRequest {
         this.targetUserId = targetUserId;
     }
 
+    public AdminUserRequest.Admin getAdmin(){
+        return admin;
+    }
+
+    public void setAdmin(AdminUserRequest.Admin admin){
+        this.admin = admin;
+    }
 }
