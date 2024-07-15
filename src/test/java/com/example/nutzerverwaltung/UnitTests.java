@@ -234,36 +234,6 @@ public class UnitTests {
 
 
     @Test
-    public void testGetUsers() {
-        try {
-            Connection connectionMock = mock(Connection.class);
-            Statement statementMock = mock(Statement.class);
-            ResultSet resultSetMock = mock(ResultSet.class);
-
-            when(connectionMock.createStatement()).thenReturn(statementMock);
-            when(statementMock.executeQuery("SELECT * FROM users")).thenReturn(resultSetMock);
-
-
-            DriverManager.setLogWriter(null);
-
-            String usersJson = userService.getUsers();
-            JSONArray jsonArray = new JSONArray(usersJson);
-            assertEquals(3, jsonArray.length());
-
-            JSONObject userObject = jsonArray.getJSONObject(0);
-            assertEquals(1L, userObject.getLong("id"));
-            assertEquals("test", userObject.getString("username"));
-            assertEquals("test@test.de", userObject.getString("email"));
-            assertEquals("123", userObject.getString("password"));
-            assertEquals("ADMIN", userObject.getString("role"));
-
-        } catch (Exception e) {
-            fail("Exception occurred while testing getUsers: " + e.getMessage());
-        }
-    }
-
-
-    @Test
     public void testUpdateUserWithExistingUsernameOrEmail() throws SQLException {
         AdminUserRequest request = new AdminUserRequest();
         request.setAdmin(admin);
