@@ -38,7 +38,7 @@ public class UserService {
         return user;
     }
 
-    private boolean isUsernameTaken(String username){
+    boolean isUsernameTaken(String username){
         try(Connection connection = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/users?autoReconnect=true", "root", "root")){
             String query = "SELECT COUNT(*) FROM users WHERE username = ?";
             try(PreparedStatement statement = connection.prepareStatement(query)){

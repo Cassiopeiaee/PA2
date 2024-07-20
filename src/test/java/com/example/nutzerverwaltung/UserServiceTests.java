@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.sql.*;
 
 @SpringBootTest
-public class UnitTests {
+public class UserServiceTests {
 
     @Mock
     private UsersRepository usersRepository;
@@ -28,15 +28,9 @@ public class UnitTests {
     private Users user;
     private Users adminUser;
 
-    private DeleteUserRequest deleteUserRequest;
-    private AdminUserRequest adminUserRequest;
-    private AdminUserRequest.UpdatedUser updatedUser;
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
-        // Setup for UserServiceTests
         user = new Users();
         user.setId(10L);
         user.setUsername("UserTest");
@@ -50,17 +44,8 @@ public class UnitTests {
         adminUser.setPassword("adminpassword");
         adminUser.setEmail("admin@example.com");
         adminUser.setrolle(Rolle.ADMIN);
-
-        // Setup for DeleteUserRequestTests
-        deleteUserRequest = new DeleteUserRequest();
-
-        // Setup for AdminUserRequestTests
-        adminUserRequest = new AdminUserRequest();
-        admin = new AdminUserRequest.Admin();
-        updatedUser = new AdminUserRequest.UpdatedUser();
     }
 
-    // UserServiceTests
     @Test
     public void testCreateUserSuccess() throws SQLException {
         try (MockedStatic<DriverManager> driverManagerMockedStatic = mockStatic(DriverManager.class);
@@ -346,6 +331,7 @@ public class UnitTests {
         }
     }
 
+
     @Test
     public void testGetUsers() throws SQLException, JSONException {
         JSONArray expectedUsers = new JSONArray();
@@ -387,6 +373,8 @@ public class UnitTests {
             assertEquals(expectedUsers.toString(), result);
         }
     }
+
+
 
     @Test
     public void testAuthenticateUserSuccess() throws SQLException {
@@ -448,148 +436,5 @@ public class UnitTests {
         }
     }
 
-    // UsersTests
-    @Test
-    public void testUsersConstructor() {
-        String username = "testUser";
-        String password = "testPassword";
-        String email = "test@example.com";
-        Rolle role = Rolle.ADMIN;
-
-        Users user = new Users(username, password, email, role);
-
-        assertEquals(username, user.getUsername());
-        assertEquals(password, user.getPassword());
-        assertEquals(email, user.getEmail());
-        assertEquals(role, user.getRolle());
-    }
-
-    @Test
-    public void testSetAndGetId() {
-        user.setId(1L);
-        assertEquals(1L, user.getId());
-    }
-
-    @Test
-    public void testSetAndGetUsername() {
-        user.setUsername("NewUsername");
-        assertEquals("NewUsername", user.getUsername());
-    }
-
-    @Test
-    public void testSetAndGetPassword() {
-        user.setPassword("NewPassword");
-        assertEquals("NewPassword", user.getPassword());
-    }
-
-    @Test
-    public void testSetAndGetEmail() {
-        user.setEmail("new@example.com");
-        assertEquals("new@example.com", user.getEmail());
-    }
-
-    @Test
-    public void testSetAndGetRolle() {
-        user.setrolle(Rolle.ADMIN);
-        assertEquals(Rolle.ADMIN, user.getRolle());
-    }
-
-    // DeleteUserRequestTests
-    @Test
-    public void testSetAndGetUsernameForDeleteUserRequest() {
-        deleteUserRequest.setUsername("username");
-        assertEquals("username", deleteUserRequest.getUsername());
-    }
-
-    @Test
-    public void testSetAndGetPasswordForDeleteUserRequest() {
-        deleteUserRequest.setPassword("password");
-        assertEquals("password", deleteUserRequest.getPassword());
-    }
-
-    @Test
-    public void testSetAndGetTargetUserIdForDeleteUserRequest() {
-        deleteUserRequest.setTargetUserId(1L);
-        assertEquals(1L, deleteUserRequest.getTargetUserId());
-    }
-
-    @Test
-    public void testSetAndGetAdminForDeleteUserRequest() {
-        AdminUserRequest.Admin admin = new AdminUserRequest.Admin();
-        admin.setUsername("adminUsername");
-        admin.setPassword("adminPassword");
-
-        deleteUserRequest.setAdmin(admin);
-        assertEquals("adminUsername", deleteUserRequest.getAdmin().getUsername());
-        assertEquals("adminPassword", deleteUserRequest.getAdmin().getPassword());
-    }
-
-    // AdminUserRequestTests
-    @Test
-    public void testSetAndGetAdmin() {
-        admin.setUsername("adminUsername");
-        admin.setPassword("adminPassword");
-        adminUserRequest.setAdmin(admin);
-
-        assertEquals("adminUsername", adminUserRequest.getAdmin().getUsername());
-        assertEquals("adminPassword", adminUserRequest.getAdmin().getPassword());
-    }
-
-    @Test
-    public void testSetAndGetUpdatedUser() {
-        updatedUser.setId(1L);
-        updatedUser.setUsername("updatedUsername");
-        updatedUser.setPassword("updatedPassword");
-        updatedUser.setEmail("updated@example.com");
-        updatedUser.setRolle("ADMIN");
-        adminUserRequest.setUpdatedUser(updatedUser);
-
-        assertEquals(1L, adminUserRequest.getUpdatedUser().getId());
-        assertEquals("updatedUsername", adminUserRequest.getUpdatedUser().getUsername());
-        assertEquals("updatedPassword", adminUserRequest.getUpdatedUser().getPassword());
-        assertEquals("updated@example.com", adminUserRequest.getUpdatedUser().getEmail());
-        assertEquals("ADMIN", adminUserRequest.getUpdatedUser().getRolle());
-    }
-
-    @Test
-    public void testAdminSetAndGetUsername() {
-        admin.setUsername("adminUsername");
-        assertEquals("adminUsername", admin.getUsername());
-    }
-
-    @Test
-    public void testAdminSetAndGetPassword() {
-        admin.setPassword("adminPassword");
-        assertEquals("adminPassword", admin.getPassword());
-    }
-
-    @Test
-    public void testUpdatedUserSetAndGetId() {
-        updatedUser.setId(1L);
-        assertEquals(1L, updatedUser.getId());
-    }
-
-    @Test
-    public void testUpdatedUserSetAndGetUsername() {
-        updatedUser.setUsername("updatedUsername");
-        assertEquals("updatedUsername", updatedUser.getUsername());
-    }
-
-    @Test
-    public void testUpdatedUserSetAndGetPassword() {
-        updatedUser.setPassword("updatedPassword");
-        assertEquals("updatedPassword", updatedUser.getPassword());
-    }
-
-    @Test
-    public void testUpdatedUserSetAndGetEmail() {
-        updatedUser.setEmail("updated@example.com");
-        assertEquals("updated@example.com", updatedUser.getEmail());
-    }
-
-    @Test
-    public void testUpdatedUserSetAndGetRolle() {
-        updatedUser.setRolle("ADMIN");
-        assertEquals("ADMIN", updatedUser.getRolle());
-    }
 }
+
