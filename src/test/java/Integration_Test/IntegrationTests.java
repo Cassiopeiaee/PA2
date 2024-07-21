@@ -1,5 +1,6 @@
-package com.example.nutzerverwaltung;
+package Integration_Test;
 
+import com.example.nutzerverwaltung.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
