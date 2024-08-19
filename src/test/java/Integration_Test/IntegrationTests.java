@@ -130,27 +130,27 @@ public class IntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        user.setId(104L);  // Setze eine neue ID für diesen Test
+        user.setId(104L);
         HttpEntity<Users> entity = new HttpEntity<>(user, headers);
 
         ResponseEntity<Users> createResponse = restTemplate.postForEntity(getRootUrl() + "/users/create", entity, Users.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         Users createdUser = createResponse.getBody();
         assertThat(createdUser).isNotNull();
-        assertThat(createdUser.getId()).isEqualTo(104L);  // Überprüfen, ob die ID korrekt gesetzt wurde
+        assertThat(createdUser.getId()).isEqualTo(104L);
         assertThat(createdUser.getUsername()).isEqualTo(user.getUsername());
-        assertThat(createdUser.getRolle()).isNotNull();  // Überprüfen, ob die Rolle gesetzt wurde
-        assertThat(createdUser.getRolle().name()).isEqualTo(user.getRolle().name());  // Überprüfen, ob der Rollenname korrekt ist
+        assertThat(createdUser.getRolle()).isNotNull();
+        assertThat(createdUser.getRolle().name()).isEqualTo(user.getRolle().name());
 
         // Abrufen des erstellten Benutzers
         ResponseEntity<Users> getResponse = restTemplate.getForEntity(getRootUrl() + "/users/get/" + createdUser.getId(), Users.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         Users fetchedUser = getResponse.getBody();
         assertThat(fetchedUser).isNotNull();
-        assertThat(fetchedUser.getId()).isEqualTo(104L);  // Überprüfen, ob die ID korrekt abgerufen wird
+        assertThat(fetchedUser.getId()).isEqualTo(104L);
         assertThat(fetchedUser.getUsername()).isEqualTo(user.getUsername());
-        assertThat(fetchedUser.getRolle()).isNotNull();  // Überprüfen, ob die Rolle vorhanden ist
-        assertThat(fetchedUser.getRolle().name()).isEqualTo(user.getRolle().name());  // Überprüfen, ob der Rollenname korrekt ist
+        assertThat(fetchedUser.getRolle()).isNotNull();
+        assertThat(fetchedUser.getRolle().name()).isEqualTo(user.getRolle().name());
     }
 
 
@@ -161,8 +161,8 @@ public class IntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        adminUser.setId(106L);  // Setze eine neue ID für diesen Test
-        adminUser.setrolle(Rolle.ADMIN);  // Verwenden der ADMIN-Enum-Instanz
+        adminUser.setId(106L);
+        adminUser.setrolle(Rolle.ADMIN);
         HttpEntity<Users> adminEntity = new HttpEntity<>(adminUser, headers);
 
         ResponseEntity<Users> createAdminResponse = restTemplate.postForEntity(getRootUrl() + "/users/create", adminEntity, Users.class);
@@ -182,8 +182,8 @@ public class IntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        adminUser.setId(109L);  // Setze eine neue ID für diesen Test
-        adminUser.setrolle(Rolle.ADMIN);  // Sicherstellen, dass die Rolle gesetzt ist
+        adminUser.setId(109L);
+        adminUser.setrolle(Rolle.ADMIN);
         HttpEntity<Users> adminEntity = new HttpEntity<>(adminUser, headers);
 
         ResponseEntity<Users> createAdminResponse = restTemplate.postForEntity(getRootUrl() + "/users/create", adminEntity, Users.class);
@@ -191,8 +191,8 @@ public class IntegrationTests {
         assertThat(createAdminResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(createdAdmin).isNotNull();
 
-        user.setId(110L);  // Setze eine neue ID für diesen Test
-        user.setrolle(Rolle.LESER);  // Sicherstellen, dass die Rolle gesetzt ist
+        user.setId(110L);
+        user.setrolle(Rolle.LESER);
         HttpEntity<Users> userEntity = new HttpEntity<>(user, headers);
 
         ResponseEntity<Users> createUserResponse = restTemplate.postForEntity(getRootUrl() + "/users/create", userEntity, Users.class);
@@ -202,8 +202,8 @@ public class IntegrationTests {
 
         // Löschen des Benutzers durch den Admin
         DeleteUserRequest deleteRequest = new DeleteUserRequest();
-        deleteRequest.setUsername(adminUser.getUsername());  // Admin-Benutzername
-        deleteRequest.setPassword(adminUser.getPassword());  // Admin-Passwort
+        deleteRequest.setUsername(adminUser.getUsername());
+        deleteRequest.setPassword(adminUser.getPassword());
         deleteRequest.setTargetUserId(createdUser.getId());
 
         HttpEntity<DeleteUserRequest> deleteEntity = new HttpEntity<>(deleteRequest, headers);
@@ -225,18 +225,18 @@ public class IntegrationTests {
     public void testGetUsers() {
         RestTemplate restTemplate = new RestTemplate();
 
-        // Setze die HTTP-Header
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // Erstelle zwei Benutzer
-        user.setId(111L);  // Setze eine neue ID für den ersten Testbenutzer
+
+        user.setId(111L);
         user.setrolle(Rolle.LESER);
         HttpEntity<Users> userEntity = new HttpEntity<>(user, headers);
         restTemplate.postForEntity(getRootUrl() + "/users/create", userEntity, Users.class);
 
         Users anotherUser = new Users();
-        anotherUser.setId(112L);  // Setze eine neue ID für den zweiten Testbenutzer
+        anotherUser.setId(112L);
         anotherUser.setUsername("anotheruser");
         anotherUser.setPassword("anotherpassword");
         anotherUser.setEmail("anotheruser@example.com");
@@ -250,7 +250,7 @@ public class IntegrationTests {
 
         // Überprüfe, ob die Antwort die beiden erstellten Benutzer enthält
         String responseBody = response.getBody();
-        assertThat(responseBody).contains("User1234");  // Beispiel für einen Benutzernamen
+        assertThat(responseBody).contains("User1234");
         assertThat(responseBody).contains("anotheruser");
     }
 
